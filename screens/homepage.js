@@ -7,4 +7,6 @@ export default function HomePage() {
       <Text>This is where our homescreen will be</Text>
     </View>
   );
+
 }
+

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -50,10 +51,13 @@ async function initializeDatabase(db) {
     }
 }
 
+
 export default function App() {
 
   return (
+
   <SQLiteProvider databaseName='leFitness.db' onInit={initializeDatabase}>
+
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} />
@@ -64,4 +68,5 @@ export default function App() {
   </SQLiteProvider>
   );
 }
+
 

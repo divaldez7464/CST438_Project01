@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -30,6 +31,7 @@ export default function Login({ navigation }) {
      getUsername(); // Fetch the username on component mount
    }, []); // Empty dependency array ensures this runs only once
 
+
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Home Screen</Text>
@@ -38,9 +40,11 @@ export default function Login({ navigation }) {
         title="This leads us to our homepage"
         onPress={() => navigation.navigate('homepage')}
       />
+
       <View style={{ padding: 20 }}>
                     <Text>User: {userName}</Text>
       </View>
+
     </View>
   );
 }
