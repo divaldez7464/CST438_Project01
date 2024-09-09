@@ -2,9 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Text, View } from 'react-native';
 import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
+import { Button, Text, View, TextInput, StyleSheet, Alert } from 'react-native';
 
+import Signup from './screens/Signup';
 import Login from './screens/login';
 import HomePage from './screens/homepage';
 import { getUserByUserName } from './DB/appDBService'
@@ -62,6 +63,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="homepage" component={HomePage} />
+        <Stack.Screen name="Signup" component={Signup} />
       </Stack.Navigator>
 
     </NavigationContainer>

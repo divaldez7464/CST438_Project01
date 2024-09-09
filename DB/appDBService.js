@@ -33,4 +33,3 @@ export const getUserByUserName = async (db,user_name) => {
     throw error;
   }
 };
-
