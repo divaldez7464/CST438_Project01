@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { useSQLiteContext } from 'expo-sqlite';  // Use SQLite context hook
 import { addUser } from '../DB/appDBService';  // Import addUser function
 
 const Signup = ({ navigation }) => {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const db = useSQLiteContext();  // Get SQLite context
 
   const handleSignup = async () => {
     if (name === '' || username === '' || password === '') {
@@ -14,7 +16,7 @@ const Signup = ({ navigation }) => {
     }
 
     try {
-      await addUser(name, username, password);
+      await addUser(db, name, username, password);  // Pass db as a parameter
       Alert.alert('Success', 'Account created successfully');
       navigation.navigate('Login');  // Navigate to the login screen
     } catch (error) {
@@ -73,3 +75,4 @@ const styles = StyleSheet.create({
 });
 
 export default Signup;
+

@@ -16,7 +16,7 @@ export default function Login({ navigation }) {
   // Function to handle login
   const handleLogin = async () => {
     if (username === '' || password === '') {
-      Alert.alert('Error', 'Please enter both username and password');
+//      Alert.alert('Error', 'Please enter both username and password');
       return;
     }
 
@@ -26,17 +26,17 @@ export default function Login({ navigation }) {
       if (user) {
         // Check if the entered password matches the user's password in the database
         if (user.password === password) {
-          Alert.alert('Success', 'Login successful');
-          navigation.navigate('Homepage');  // Navigate to the homepage if login is successful
+//          Alert.alert('Success', 'Login successful');
+          navigation.navigate('homepage');  // Navigate to the homepage if login is successful
         } else {
-          Alert.alert('Error', 'Incorrect password');
+//          Alert.alert('Error', 'Incorrect password');
         }
       } else {
-        Alert.alert('Error', 'User not found');
+//        Alert.alert('Error', 'User not found');
       }
     } catch (error) {
       console.error('Error during login:', error);
-      Alert.alert('Error', 'An error occurred during login');
+//      Alert.alert('Error', 'An error occurred during login');
     }
   };
 
