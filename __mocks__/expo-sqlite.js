@@ -4,6 +4,9 @@ console.log('expo-sqlite mock loaded');
 let mockDatabase = {
   user: [
     { id: 1, name: 'Angel Bedolla', user_name: 'angel', password: 'password' }
+  ],
+  favorites:[
+    {id: 2, user_name:'angel', exercise_name: 'pushups'}
   ]
 };
 
@@ -71,5 +74,29 @@ export const useSQLiteContext = () => ({
     } else {
       throw new Error('Unknown SQL command');
     }
-  }
+  },
+
+  // Mocking getAllAsync
+    getAllAsync: async (sql, params) => {
+      console.log('getAllAsync called with SQL:', sql);
+      console.log('getAllAsync called with params:', params);
+
+      if (sql.startsWith('SELECT')) {
+        const tableName = sql.match(/FROM (\w+)/)[1];
+        if (!mockDatabase[tableName]) {
+          throw new Error('Table not found');
+        }
+        console.log('finding table: ',tableName);
+        var result;
+        if(mockDatabase[tableName][0].user_name == params){
+          result = mockDatabase[tableName][0] }
+        else{
+          result = false;
+        }
+        console.log('Simulating getAllAsync with result:', result);
+        return result || null;
+      } else {
+        throw new Error('Unknown SQL command');
+      }
+    }
 });

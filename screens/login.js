@@ -27,7 +27,7 @@ export default function Login({ navigation }) {
         // Check if the entered password matches the user's password in the database
         if (user.password === password) {
 //          Alert.alert('Success', 'Login successful');
-          navigation.navigate('homepage');  // Navigate to the homepage if login is successful
+          navigation.navigate('homepage',{user: user});  // Navigate to the homepage if login is successful
         } else {
 //          Alert.alert('Error', 'Incorrect password');
         }

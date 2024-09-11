@@ -1,21 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; // Import navigation hook
+import { getUserByUserName,addFavorites, getFavorites } from '../DB/appDBService';
+import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
 
-export default function HomePage() {
+export default function HomePage({navigation, route}) {
   const [data, setData] = useState([]);
-  const navigation = useNavigation(); // Get the navigation object
+  const db = useSQLiteContext();
+
+  const{user} = route.params;
 
   const getAPIData = async () => {
     try {
-      const response = await fetch(
-        'https://api.api-ninjas.com/v1/exercises',
-        {
-          headers: { 'X-Api-Key': 'a+UdRTtcI7mwP3tddq5GyA==2RsJT7qm8cOUlP9o' },
-        }
-      );
-      const result = await response.json();
-      setData(result);
+      var favorites = await getFavorites(db,user.user_name);
+      console.log(JSON.stringify(favorites));
+
+      var result = [];
+      for(i in favorites){
+        console.log(JSON.stringify(favorites[i]));
+        var response = await fetch(
+                'https://api.api-ninjas.com/v1/exercises?name='+favorites[i].exercise_name,
+                {
+                  headers: { 'X-Api-Key': 'a+UdRTtcI7mwP3tddq5GyA==2RsJT7qm8cOUlP9o' },
+                }
+        );
+        var exercise =  await response.json();
+        result.push(exercise[0])
+      }
+      console.log("data"+JSON.stringify(result));
+      setData(JSON.parse(JSON.stringify(result)));
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -46,9 +59,9 @@ export default function HomePage() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>Welcome to LeFitness</Text>
+      <Text style={styles.welcomeText}>Welcome to LeFitness!</Text>
 
-      <Text style={styles.favoritesHeader}>Favorites</Text>
+      <Text style={styles.favoritesHeader}>{user.name}'s Favorites</Text>
       {data.length > 0 ? (
         <FlatList
           data={data}
@@ -65,7 +78,7 @@ export default function HomePage() {
           <TouchableOpacity
             key={index}
             style={styles.exploreItem}
-            onPress={() => navigation.navigate(category.screen)} // Navigate to the respective muscle group screen
+            onPress={() => navigation.navigate(category.screen,{user:user})} // Navigate to the respective muscle group screen
           >
             <Text style={styles.exploreText}>{category.name}</Text>
           </TouchableOpacity>

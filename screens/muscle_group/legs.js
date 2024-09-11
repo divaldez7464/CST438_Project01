@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { getUserByUserName,addFavorites, getFavorites } from '../../DB/appDBService';
+import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
 
-export default function LegsScreen({ navigation }) {
+export default function LegsScreen({ navigation, route }) {
   const [exercisesByMuscle, setExercisesByMuscle] = useState({});
   const [loading, setLoading] = useState(true);
   const [expandedSections, setExpandedSections] = useState({});
+  const db = useSQLiteContext();
+  const{user} = route.params;
 
   const legMuscles = ['calves', 'glutes', 'hamstrings', 'adductors', 'quadriceps'];
 
   const getLegExercises = async () => {
+
     try {
       const exercises = {};
       for (const muscle of legMuscles) {
@@ -43,7 +48,10 @@ export default function LegsScreen({ navigation }) {
   };
 
   const addToFavorites = (exercise) => {
-    console.log('Adding to favorites:', exercise);
+    console.log('Adding to favorites:', exercise.name);
+    addFavorites(db, user.user_name,exercise.name);
+
+    console.log(getFavorites(db,"angel"));
   };
 
   return (
