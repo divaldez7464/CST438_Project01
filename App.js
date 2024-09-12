@@ -9,8 +9,14 @@ import Signup from './screens/Signup';
 import Login from './screens/login';
 import { getUserByUserName } from './DB/appDBService'
 import HomePage from './screens/homepage';
+
 import ExerciseDetailScreen from './screens/muscle_group/exerciseDetail';
 import LegsScreen from './screens/muscle_group/legs';
+import ChestScreen from './screens/muscle_group/chest';
+import BackScreen from './screens/muscle_group/back';
+import ArmsScreen from './screens/muscle_group/arms';
+import AbsScreen from './screens/muscle_group/abs';
+import NeckScreen from './screens/muscle_group/neck';
 
 const Stack = createNativeStackNavigator();
 
@@ -80,6 +86,31 @@ export default function App() {
             name="LegsScreen"
             component={LegsScreen}
             options={{ headerShown: true, title: 'Leg Exercises' }}
+          />
+          <Stack.Screen
+            name="ChestScreen"
+            component={ChestScreen}
+            options={{ headerShown: true, title: 'Chest Exercises' }}
+          />
+          <Stack.Screen
+            name="BackScreen"
+            component={BackScreen}
+            options={{ headerShown: true, title: 'Back Exercises' }}
+          />
+          <Stack.Screen
+            name="ArmsScreen"
+            component={ArmsScreen}
+            options={{ headerShown: true, title: 'Arm Exercises' }}
+          />
+          <Stack.Screen
+            name="AbsScreen"
+            component={AbsScreen}
+            options={{ headerShown: true, title: 'Abs Exercises' }}
+          />
+          <Stack.Screen
+            name="NeckScreen"
+            component={NeckScreen}
+            options={{ headerShown: true, title: 'Neck Exercises' }}
           />
           <Stack.Screen
             name="ExerciseDetail"
