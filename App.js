@@ -41,6 +41,13 @@ async function initializeDatabase(db) {
               date TEXT NOT NULL,
               FOREIGN KEY(user_name) REFERENCES user(user_name)
             );
+            CREATE TABLE IF NOT EXISTS customWorkouts (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              exercise TEXT NOT NULL,
+              type TEXT NOT NULL,
+              muscle TEXT NOT NULL,
+              equipment TEXT NOT NULL
+            );
           `);
     console.log('Database initialised');
     const testUser = await getUserByUserName(db, 'angel'); // Pass the db instance and username
