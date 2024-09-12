@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import SignUpScreen from './SignUpScreen'; // Adjust the path if necessary
+import ExorciseList from './ExorciseList'; 
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <SignUpScreen />
+      <ExorciseList />
     </View>
   );
 }
@@ -13,8 +13,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    backgroundColor: '#f0f0f0', 
+   },
 });
