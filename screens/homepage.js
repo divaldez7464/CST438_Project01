@@ -50,11 +50,11 @@ export default function HomePage({navigation, route}) {
   // Categories for Explore section
   const categories = [
     { name: 'Legs', screen: 'LegsScreen' },
-    { name: 'Chest', screen: 'Chest' },
-    { name: 'Back', screen: 'Back' },
-    { name: 'Arms', screen: 'Arms' },
-    { name: 'Abs', screen: 'Abs' },
-    { name: 'Cardio', screen: 'Cardio' },
+    { name: 'Chest', screen: 'ChestScreen' },
+    { name: 'Back', screen: 'BackScreen' },
+    { name: 'Arms', screen: 'ArmsScreen' },
+    { name: 'Abs', screen: 'AbsScreen' },
+    { name: 'Neck', screen: 'NeckScreen' },
   ];
 
   return (
