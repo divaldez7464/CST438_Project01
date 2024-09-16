@@ -28,6 +28,16 @@ React Native: https://reactnative.dev/
 - Diego Valdez: divaldez7464 https://github.com/divaldez7464
 - Mark Garban: yoo-loc https://github.com/yoo-loc 
 - Tuan Nguyen: T-Nguyen2089 https://github.com/T-Nguyen2089
+  
+## Change log
 
+- HomePage/API #6: Created homepage and API functions
+- Created skeleton for AppDataBase, created folder for unit with example. #13
+- Added route to homepage #14: Created route from login to homepage.js. Added test files for signup, login, homepage.
+- Created database tables users, favorites, and logs with create and re… #23
+- loggin #24: Created login page and signup page
+- Updated api calls #25: Updated api calls
+- Added favorites logic #27
+- Abs page and details #28
 
 
