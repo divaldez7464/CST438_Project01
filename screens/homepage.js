@@ -1,54 +1,103 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; // Import navigation hook
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Button } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { EventRegister } from 'react-native-event-listeners'; // Import event listener
 import { getUserByUserName,addFavorites, getFavorites } from '../DB/appDBService';
 import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
 import { getTip} from "../DB/tips";
 
-export default function HomePage({navigation, route}) {
+export default function HomePage({ navigation, route }) {
   const [data, setData] = useState([]);
   const [tip, setTip] = useState('');
+  const [loading, setLoading] = useState(true);
   const db = useSQLiteContext();
 
   const{user} = route.params;
 
   const getAPIData = async () => {
     try {
-      var favorites = await getFavorites(db,user.user_name);
-      console.log(JSON.stringify(favorites));
+      setLoading(true); // Start loading
+      const favorites = await getFavorites(db, user.user_name);
+      const result = [];
 
-      var result = [];
-      for(i in favorites){
-        console.log(JSON.stringify(favorites[i]));
-        var response = await fetch(
-                'https://api.api-ninjas.com/v1/exercises?name='+favorites[i].exercise_name,
-                {
-                  headers: { 'X-Api-Key': 'a+UdRTtcI7mwP3tddq5GyA==2RsJT7qm8cOUlP9o' },
-                }
+      for (const favorite of favorites) {
+        const response = await fetch(
+          `https://api.api-ninjas.com/v1/exercises?name=${favorite.exercise_name}`,
+          {
+            headers: { 'X-Api-Key': 'a+UdRTtcI7mwP3tddq5GyA==2RsJT7qm8cOUlP9o' },
+          }
         );
-        var exercise =  await response.json();
-        result.push(exercise[0])
+        const exercise = await response.json();
+        result.push({ ...exercise[0], id: favorite.id });
       }
-      console.log("data"+JSON.stringify(result));
-      setData(JSON.parse(JSON.stringify(result)));
+      setData(result);
+      setLoading(false); // Stop loading
     } catch (error) {
       console.error('Error fetching data:', error);
+      setLoading(false); // Stop loading on error
     }
   };
 
-  useEffect(() => {
-    getAPIData();
-    setTip(getTip);
-  }, []);
+useEffect(() => {
+  // Fetch the initial favorites when the component mounts
+  getAPIData();
+  setTip(getTip);
+
+  // Listen for the event when favorites change
+  const eventListener = EventRegister.on('favoritesChanged', () => {
+    console.log('Favorites have changed. Re-fetching...');
+    getAPIData();  // Re-fetch the favorites
+  });
+
+  // Cleanup the event listener when the component unmounts
+  return () => {
+    EventRegister.rm(eventListener);  // Correctly remove the event listener
+  };
+}, []);
+
+
+  // Function to handle delete
+  const handleDelete = async (exerciseId) => {
+    if (!exerciseId) {
+      console.error('Error: No exercise ID provided for deletion');
+      return;
+    }
+
+    try {
+      // Remove from the database
+      await deleteFavorite(db, exerciseId);
+      console.log('Favorite deleted:', exerciseId);
+
+      // Update the UI
+      setData(prevData => prevData.filter(item => item.id !== exerciseId));
+    } catch (error) {
+      console.error('Error deleting favorite:', error);
+    }
+  };
 
   const renderItem = ({ item }) => (
     <View style={styles.exerciseItem}>
-      <Text style={styles.exerciseName}>{item.name}</Text>
-      <Text>Type: {item.type}</Text>
-      <Text>Muscle: {item.muscle}</Text>
-      <Text>Equipment: {item.equipment}</Text>
+      <View style={styles.exerciseInfo}>
+        <Text style={styles.exerciseName}>{item.name}</Text>
+        <Text>Type: {item.type}</Text>
+        <Text>Muscle: {item.muscle}</Text>
+        <Text>Equipment: {item.equipment}</Text>
+      </View>
+
+      {/* Add Delete Button */}
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => handleDelete(item.id)}
+      >
+        <Text style={styles.deleteButtonText}>X</Text>
+      </TouchableOpacity>
     </View>
   );
+
+  const handleLogout = () => {
+    // Logic to clear session or token if necessary
+    navigation.navigate('Login');  // Navigate back to the login screen
+  };
 
   // Categories for Explore section
   const categories = [
@@ -67,14 +116,16 @@ export default function HomePage({navigation, route}) {
       <Text style={styles.tipOfDay}>Tip of the Day: {tip}</Text>
 
       <Text style={styles.favoritesHeader}>{user.name}'s Favorites</Text>
-      {data.length > 0 ? (
+      {loading ? (
+        <Text>Loading...</Text>
+      ) : data.length > 0 ? (
         <FlatList
           data={data}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
         />
       ) : (
-        <Text>Loading...</Text>
+        <Text>No favorites found.</Text>
       )}
 
       <Text style={styles.exploreHeader}>Explore</Text>
@@ -83,12 +134,14 @@ export default function HomePage({navigation, route}) {
           <TouchableOpacity
             key={index}
             style={styles.exploreItem}
-            onPress={() => navigation.navigate(category.screen,{user:user})} // Navigate to the respective muscle group screen
+            onPress={() => navigation.navigate(category.screen, { user: user })}
           >
             <Text style={styles.exploreText}>{category.name}</Text>
           </TouchableOpacity>
         ))}
       </View>
+
+      <Button title="Logout" onPress={handleLogout} />
     </View>
   );
 }
@@ -149,6 +202,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   exerciseItem: {
+    flexDirection: 'row',  // Align delete button horizontally
     backgroundColor: '#ffffff',
     padding: 15,
     marginBottom: 15,
@@ -158,9 +212,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
   },
+  exerciseInfo: {
+    flex: 1,
+  },
   exerciseName: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 5,
+  },
+  deleteButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 30,
+    height: 30,
+    backgroundColor: 'red',
+    borderRadius: 15,
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
