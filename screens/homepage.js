@@ -3,9 +3,11 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native
 import { useNavigation } from '@react-navigation/native'; // Import navigation hook
 import { getUserByUserName,addFavorites, getFavorites } from '../DB/appDBService';
 import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
+import { getTip} from "../DB/tips";
 
 export default function HomePage({navigation, route}) {
   const [data, setData] = useState([]);
+  const [tip, setTip] = useState('');
   const db = useSQLiteContext();
 
   const{user} = route.params;
@@ -36,6 +38,7 @@ export default function HomePage({navigation, route}) {
 
   useEffect(() => {
     getAPIData();
+    setTip(getTip);
   }, []);
 
   const renderItem = ({ item }) => (
@@ -60,6 +63,8 @@ export default function HomePage({navigation, route}) {
   return (
     <View style={styles.container}>
       <Text style={styles.welcomeText}>Welcome to LeFitness!</Text>
+
+      <Text style={styles.tipOfDay}>Tip of the Day: {tip}</Text>
 
       <Text style={styles.favoritesHeader}>{user.name}'s Favorites</Text>
       {data.length > 0 ? (
@@ -100,6 +105,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 50,
     textAlign: 'left',
+  },
+  tipOfDay: {
+      fontSize: 20,
+      fontWeight: '500',
+      marginBottom: 15,
+      marginTop: 10,
+      textAlign: 'left',
+      fontStyle: 'italic',
+      color: '#555',
   },
   favoritesHeader: {
     fontSize: 24,
