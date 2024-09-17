@@ -62,7 +62,7 @@ export default function Login({ navigation }) {
       />
 
       {/* Login Button */}
-      <Button title="Login" onPress={handleLogin} />
+<Button title="Login" onPress={handleLogin} testID="loginButton" />
 
       {/* Navigation to Signup Screen */}
       <Text style={styles.signupText}>
