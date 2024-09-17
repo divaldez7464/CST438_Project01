@@ -1,59 +1,56 @@
-var test = require('unit.js');
+import { addUser, getUserByUserName, addFavorites, getFavorites } from '../DB/appDBService';
+import { jest } from '@jest/globals';
 
+jest.mock('expo-sqlite');
 
-describe('Testing AppDataBase', function(){
-  it('test read Logs', function(){
-    // just for example of tested value
-    var example = 'hello world';
-    test
-      .string(example)
-        .startsWith('hello')
-        .match(/[a-z]/)
-      .given(example = 'you are welcome')
-        .string(example)
-          .endsWith('welcome')
-          .contains('you')
-      .when('"example" becomes an object', function(){
-        example = {
-          message: 'hello world',
-          name: 'Nico',
-          job: 'developper',
-          from: 'France'
-        };
-      })
-      .then('test the "example" object', function(){
-        test
-          .object(example)
-            .hasValue('developper')
-            .hasProperty('name')
-            .hasProperty('from', 'France')
-            .contains({message: 'hello world'})
-        ;
-      })
-      .if(example = 'bad value')
-        .error(function(){
-          example.badMethod();
-        })
-    ;
-  });
+describe('Database CRUD Operations (Mocked)', () => {
+    it('should add a user successfully', async () => {
 
-  it('test insert log', function(){
+      //debug logs for sanity checks
+      console.log('Running addUser test');
+      const result = await addUser(null,'Roe Deer', 'Red Deer', 'red fox');
+      console.log('addUser result:', result);
 
-  });
-
-  it('test read favorites', function(){
-
+      expect(result.insertId).toBe(1);
     });
 
-  it('test insert favorites', function(){
+    it('should retrieve the added user by username', async () => {
+      console.log('Running getUserByUserName test');
 
+      await addUser(null,'Angel Bedolla', 'angel', 'password');
+      const user = await getUserByUserName(null,'angel');
+      console.log('getUserByUserName result:', user);
+
+      expect(user).toBeDefined();
+
+      expect(user.user_name).toBe('angel');
+      expect(user.name).toBe('Angel Bedolla');
     });
 
-  it('test read user', function(){
+    it('should add to favorites successfully', async () => {
 
-   });
+      //deug logs for sanity checks
+      console.log('Running addFavorites test');
+      const result = await addFavorites(null,'angel','situps');
+      console.log('addFavorites result:', result);
 
-   it('test insert user', function(){
-       // other tests ...
-   });
+    expect(result.insertId).toBe(1);
+    });
+
+    it('should retrieve favorites by username', async () => {
+      console.log('Running getFavorites test');
+
+      await addFavorites(null,'angel','pushups');
+      const favorites = await getFavorites(null,'angel');
+      console.log('getFavorites result:', favorites);
+
+      expect(favorites).toBeDefined();
+
+      expect(favorites.user_name).toBe('angel');
+      expect(favorites.exercise_name).toBe('pushups');
+    });
+
+
+
+
 });
