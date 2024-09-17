@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function ArmsScreen({ navigation }) {
+export default function NeckScreen({ navigation }) {
   const [exercisesByMuscle, setExercisesByMuscle] = useState({});
   const [loading, setLoading] = useState(true);
   const [expandedSections, setExpandedSections] = useState({});
 
-  const armMuscles = ['biceps', 'forearms', 'triceps'];
+  const neckMuscles = ['neck'];
 
-  const getLegExercises = async () => {
+  const getNeckExercises = async () => {
     try {
       const exercises = {};
-      for (const muscle of armMuscles) {
+      for (const muscle of neckMuscles) {
         const response = await fetch(`https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`, {
           headers: { 'X-Api-Key': 'a+UdRTtcI7mwP3tddq5GyA==2RsJT7qm8cOUlP9o' },
         });
@@ -28,7 +28,7 @@ export default function ArmsScreen({ navigation }) {
   };
 
   useEffect(() => {
-    getLegExercises();
+    getNeckExercises();
   }, []);
 
   const toggleSection = (muscle) => {
@@ -48,12 +48,12 @@ export default function ArmsScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Arm Exercises</Text>
+      <Text style={styles.title}>Neck Exercises</Text>
       {loading ? (
         <Text>Loading...</Text>
       ) : (
         <ScrollView style={styles.scrollView}>
-          {armMuscles.map((muscle) => (
+          {neckMuscles.map((muscle) => (
             <View key={muscle}>
               <TouchableOpacity 
                 style={styles.muscleHeader} 

@@ -58,7 +58,7 @@ export default function LegsScreen({ navigation, route }) {
     <View style={styles.container}>
       <Text style={styles.title}>Leg Exercises</Text>
       {loading ? (
-        <Text>Loading...</Text>
+        <Text>No Favorites</Text>
       ) : (
         <ScrollView style={styles.scrollView}>
           {legMuscles.map((muscle) => (
