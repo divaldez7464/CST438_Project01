@@ -90,21 +90,42 @@ export const addFavorites = async (db,user_name,name ) => {
   }
 };
 
-export const getFavorites = async (db, user_name) => {
-  if(db == null){
-    db = useSQLiteContext();
-  }
-  console.log('getFavorites called with:', user_name);
+export const getFavorites = async (db, userName) => {
   try {
     const result = await db.getAllAsync(
-      'SELECT exercise_name FROM favorites WHERE user_name = ?;',
-      user_name
+      'SELECT id, exercise_name FROM favorites WHERE user_name = ?',
+      [userName]
     );
-    console.log('Select Query:', result);
     return result;
   } catch (error) {
-    console.error('Query error:', error);
-    throw error;
+    console.error('Error fetching favorites:', error);
+    return [];
   }
 };
 
+
+export const deleteFavorite = async (db, exerciseId) => {
+  try {
+    await db.runAsync(`DELETE FROM favorites WHERE id = ?`, [exerciseId]);
+    console.log('Favorite deleted:', exerciseId);
+  } catch (error) {
+    console.error('Error deleting favorite:', error);
+  }
+};
+
+
+const handleDelete = async (exerciseId) => {
+    try {
+      console.log('Deleting favorite with id:', exerciseId);  // Log the ID before deletion
+
+      // Remove from the database
+      await deleteFavorite(db, exerciseId);
+
+      console.log('Favorite deleted successfully.');
+
+      // Update the UI
+      setData(prevData => prevData.filter(item => item.id !== exerciseId));
+    } catch (error) {
+      console.error('Error deleting favorite:', error);
+    }
+  };
