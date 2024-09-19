@@ -42,5 +42,9 @@ react-native-event-listeners
 - Updated api calls #25: Updated api calls
 - Added favorites logic #27
 - Abs page and details #28
-
+- All exercises for other muscle groups #32
+- Added tips to homepage #33
+- added logout and user able to delete from the favorite page #34
+- added logo. Added favorites logic to other body groups #35
+- Fixed Unit Test #36
 
