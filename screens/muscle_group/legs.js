@@ -3,7 +3,7 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-nati
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getUserByUserName,addFavorites, getFavorites } from '../../DB/appDBService';
 import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
-import { EventRegister } from 'react-native-event-listeners';  // Install this package
+import { EventRegister } from 'react-native-event-listeners';
 
 
 export default function LegsScreen({ navigation, route }) {
@@ -53,10 +53,9 @@ const addToFavorites = async (exercise) => {
   try {
     console.log('Adding to favorites:', exercise.name);
 
-    // Add the exercise to the favorites
+    // Add the exercise to the favorites based on username from given route
     await addFavorites(db, user.user_name, exercise.name);
 
-    // Emit event to notify that the favorites list has changed
     EventRegister.emit('favoritesChanged', 'Favorite added');
 
     alert(`${exercise.name} added to favorites!`);

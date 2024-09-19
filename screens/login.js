@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Image, Dimensions } from 'react-native';
 
 import HomePage from './homepage';
 import { getUserByUserName } from '../DB/appDBService';
+
+const { width, height } = Dimensions.get('window');
 
 export default function Login({ navigation }) {
   const [username, setUsername] = useState(''); // Input state for username
@@ -42,6 +44,10 @@ export default function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Image
+         source={require('../assets/leFitLogo.png')} // Replace with your logo path
+         style={styles.logo}
+      />
       <Text style={styles.title}>Login</Text>
 
       {/* Username Input */}
@@ -100,6 +106,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     textAlign: 'center',
   },
+  logo: {
+        alignSelf: 'center',
+      width: width* 0.55,  // Increased width for bigger logo
+      height: 100, // Increased height for bigger logo
+      marginBottom: 20, // More space between the logo and login text
+    },
   signupLink: {
     color: 'blue',
   },
