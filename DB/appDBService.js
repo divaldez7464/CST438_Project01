@@ -96,6 +96,7 @@ export const getFavorites = async (db, userName) => {
       'SELECT id, exercise_name FROM favorites WHERE user_name = ?',
       [userName]
     );
+    console.log(result);
     return result;
   } catch (error) {
     console.error('Error fetching favorites:', error);
@@ -104,28 +105,11 @@ export const getFavorites = async (db, userName) => {
 };
 
 
-export const deleteFavorite = async (db, exerciseId) => {
+export const deleteFavorite = async (db, exercise_name) => {
   try {
-    await db.runAsync(`DELETE FROM favorites WHERE id = ?`, [exerciseId]);
-    console.log('Favorite deleted:', exerciseId);
+    await db.runAsync(`DELETE FROM favorites WHERE exercise_name = ?`, [exercise_name]);
+    console.log('Favorite deleted:', exercise_name);
   } catch (error) {
     console.error('Error deleting favorite:', error);
   }
 };
-
-
-const handleDelete = async (exerciseId) => {
-    try {
-      console.log('Deleting favorite with id:', exerciseId);  // Log the ID before deletion
-
-      // Remove from the database
-      await deleteFavorite(db, exerciseId);
-
-      console.log('Favorite deleted successfully.');
-
-      // Update the UI
-      setData(prevData => prevData.filter(item => item.id !== exerciseId));
-    } catch (error) {
-      console.error('Error deleting favorite:', error);
-    }
-  };

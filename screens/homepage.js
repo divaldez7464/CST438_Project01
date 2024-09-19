@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { EventRegister } from 'react-native-event-listeners'; // Import event listener
-import { getUserByUserName,addFavorites, getFavorites } from '../DB/appDBService';
+import { getUserByUserName,addFavorites, getFavorites, deleteFavorite } from '../DB/appDBService';
 import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
 import { getTip} from "../DB/tips";
 
@@ -57,19 +57,18 @@ useEffect(() => {
 
 
   // Function to handle delete
-  const handleDelete = async (exerciseId) => {
-    if (!exerciseId) {
-      console.error('Error: No exercise ID provided for deletion');
+  const handleDelete = async (exercise_name) => {
+    if (!exercise_name) {
+      console.error('Error: No exercise name provided for deletion');
       return;
     }
 
     try {
       // Remove from the database
-      await deleteFavorite(db, exerciseId);
-      console.log('Favorite deleted:', exerciseId);
+      await deleteFavorite(db, exercise_name);
+      console.log('Favorite deleted:', exercise_name);
 
-      // Update the UI
-      setData(prevData => prevData.filter(item => item.id !== exerciseId));
+      setData(prevData => prevData.filter(item => item.name !== exercise_name));
     } catch (error) {
       console.error('Error deleting favorite:', error);
     }
@@ -87,7 +86,7 @@ useEffect(() => {
       {/* Add Delete Button */}
       <TouchableOpacity
         style={styles.deleteButton}
-        onPress={() => handleDelete(item.id)}
+        onPress={() => handleDelete(item.name)}
       >
         <Text style={styles.deleteButtonText}>X</Text>
       </TouchableOpacity>
@@ -95,11 +94,12 @@ useEffect(() => {
   );
 
   const handleLogout = () => {
-    // Logic to clear session or token if necessary
+
     navigation.navigate('Login');  // Navigate back to the login screen
+    //we do not need any other logic for this. Since login is just sending username from page to page,
+    // this will replicate login out
   };
 
-  // Categories for Explore section
   const categories = [
     { name: 'Legs', screen: 'LegsScreen' },
     { name: 'Chest', screen: 'ChestScreen' },
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   deleteButtonText: {
-    color: '#fff',
+    color: 'white',
     fontWeight: 'bold',
   },
 });

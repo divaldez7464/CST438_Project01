@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { getUserByUserName,addFavorites, getFavorites } from '../../DB/appDBService';
+import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
+import { EventRegister } from 'react-native-event-listeners';
 
-export default function BackScreen({ navigation }) {
+export default function BackScreen({ navigation , route }) {
   const [exercisesByMuscle, setExercisesByMuscle] = useState({});
   const [loading, setLoading] = useState(true);
   const [expandedSections, setExpandedSections] = useState({});
+  const db = useSQLiteContext();
+  const{user} = route.params;
 
   const chestMuscles = ['lats', 'lower_back', 'middle_back', 'traps'];
 
@@ -42,8 +47,19 @@ export default function BackScreen({ navigation }) {
     navigation.navigate('ExerciseDetail', { exercise });
   };
 
-  const addToFavorites = (exercise) => {
-    console.log('Adding to favorites:', exercise);
+  const addToFavorites = async (exercise) => {
+          try {
+            console.log('Adding to favorites:', exercise.name);
+
+            // Add the exercise to the favorites based on username from given route
+            await addFavorites(db, user.user_name, exercise.name);
+
+            EventRegister.emit('favoritesChanged', 'Favorite added');
+
+            alert(`${exercise.name} added to favorites!`);
+          } catch (error) {
+            console.error('Error adding to favorites:', error);
+          }
   };
 
   return (
