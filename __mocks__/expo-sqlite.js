@@ -42,7 +42,6 @@ export const useSQLiteContext = () => ({
 
     if (sql.startsWith('INSERT')) {
       console.log('Simulating insert success');
-
       return { insertId: 1 };
     } else if (sql.startsWith('UPDATE') || sql.startsWith('DELETE')) {
       console.log('Simulating update/delete success');

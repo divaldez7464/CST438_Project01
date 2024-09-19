@@ -65,7 +65,7 @@ useEffect(() => {
 
     try {
       // Remove from the database
-      await deleteFavorite(db, exercise_name);
+      await deleteFavorite(db, user.user_name, exercise_name);
       console.log('Favorite deleted:', exercise_name);
 
       setData(prevData => prevData.filter(item => item.name !== exercise_name));

@@ -1,5 +1,5 @@
 //to run test
-import { addUser, getUserByUserName, addFavorites, getFavorites } from '../DB/appDBService';
+import { addUser, getUserByUserName, addFavorites, getFavorites, deleteFavorite } from '../DB/appDBService';
 import { jest } from '@jest/globals';
 
 jest.mock('expo-sqlite');
@@ -49,7 +49,19 @@ describe('Database CRUD Operations (Mocked)', () => {
 
           expect(favorites.user_name).toBe('angel');
           expect(favorites.exercise_name).toBe('pushups');
-        });
+      });
+
+      it('should delete favorites by username', async () => {
+         console.log('Running getFavorites test');
+
+         const result = await deleteFavorite(null,'angel','pushups');
+
+         console.log('delete pushups: '.result);
+
+         expect(result).toBeDefined();
+
+         expect(result).toBe(1);
+      });
 
 
 });
