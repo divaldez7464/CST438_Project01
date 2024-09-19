@@ -36,41 +36,43 @@ export const getUserByUserName = async (db,user_name) => {
   }
 };
 
-export const addCustomWorkout = async (db,exercise,type, muscle, equipment ) => {
-  if(db == null){
-      db = useSQLiteContext()
-    }
-  console.log('addCustomWorkout called with:', { exercise,type, muscle, equipment });
-  try {
-    const result = await db.runAsync(
-      'INSERT INTO customWorkouts (exercise,type, muscle, equipment ) VALUES (?, ?, ?, ?);',
-      exercise,type, muscle, equipment
-    );
-    console.log('Insert successful:', result);
-    return result;
-  } catch (error) {
-    console.error('Insert error:', error);
-    throw error;
-  }
-};
-
-export const getCustomWorkouts = async (db,muscle) => {
-  if(db == null){
-    db = useSQLiteContext();
-  }
-  console.log('getCustomWorkouts called with:', muscle);
-  try {
-    const result = await db.getFirstAsync(
-      'SELECT * FROM customWorkouts WHERE muscle = ?;',
-      muscle
-    );
-    console.log('Select Query:', result);
-    return result;
-  } catch (error) {
-    console.error('Query error:', error);
-    throw error;
-  }
-};
+//legacy code: we were unable to create a customeWorkout portion
+//export const addCustomWorkout = async (db,exercise,type, muscle, equipment ) => {
+//  if(db == null){
+//      db = useSQLiteContext()
+//    }
+//  console.log('addCustomWorkout called with:', { exercise,type, muscle, equipment });
+//  try {
+//    const result = await db.runAsync(
+//      'INSERT INTO customWorkouts (exercise,type, muscle, equipment ) VALUES (?, ?, ?, ?);',
+//      exercise,type, muscle, equipment
+//    );
+//    console.log('Insert successful:', result);
+//    return result;
+//  } catch (error) {
+//    console.error('Insert error:', error);
+//    throw error;
+//  }
+//};
+//
+////legacy code: we were unable to create a customeWorkout portion
+//export const getCustomWorkouts = async (db,muscle) => {
+//  if(db == null){
+//    db = useSQLiteContext();
+//  }
+//  console.log('getCustomWorkouts called with:', muscle);
+//  try {
+//    const result = await db.getFirstAsync(
+//      'SELECT * FROM customWorkouts WHERE muscle = ?;',
+//      muscle
+//    );
+//    console.log('Select Query:', result);
+//    return result;
+//  } catch (error) {
+//    console.error('Query error:', error);
+//    throw error;
+//  }
+//};
 
 export const addFavorites = async (db,user_name,name ) => {
   if(db == null){
@@ -91,6 +93,9 @@ export const addFavorites = async (db,user_name,name ) => {
 };
 
 export const getFavorites = async (db, userName) => {
+    if(db == null){
+      db = useSQLiteContext();
+   }
   try {
     const result = await db.getAllAsync(
       'SELECT id, exercise_name FROM favorites WHERE user_name = ?',
@@ -104,11 +109,14 @@ export const getFavorites = async (db, userName) => {
   }
 };
 
-
-export const deleteFavorite = async (db, exercise_name) => {
+export const deleteFavorite = async (db,user_name, exercise_name) => {
+   if(db == null){
+      db = useSQLiteContext();
+   }
   try {
-    await db.runAsync(`DELETE FROM favorites WHERE exercise_name = ?`, [exercise_name]);
+    await db.runAsync(`DELETE FROM favorites WHERE exercise_name = ? AND user_name = ?`, [exercise_name, user_name]);
     console.log('Favorite deleted:', exercise_name);
+    return 1;
   } catch (error) {
     console.error('Error deleting favorite:', error);
   }
