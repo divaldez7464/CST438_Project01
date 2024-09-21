@@ -7,21 +7,27 @@ const Signup = ({ navigation }) => {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordAgain, setpasswordAgain] = useState('');
   const db = useSQLiteContext();  // Get SQLite context
 
   const handleSignup = async () => {
-    if (name === '' || username === '' || password === '') {
+    if (name === '' || username === '' || password === ''|| passwordAgain === '') {
       Alert.alert('Error', 'Please fill out all fields');
       return;
     }
 
     try {
-      await addUser(db, name, username, password);  // Pass db as a parameter
-      Alert.alert('Success', 'Account created successfully');
-      navigation.navigate('Login');  // Navigate to the login screen
+      if(password == passwordAgain){
+        await addUser(db, name, username, password);  // Pass db as a parameter
+        Alert.alert('Success', 'Account created successfully');
+        navigation.navigate('Login');
+      }else{
+        Alert.alert('Error', 'Passwords Do Not Match');
+      }
+      // Navigate to the login screen
     } catch (error) {
       console.error('Signup error:', error);
-      Alert.alert('Error', 'An error occurred while creating the account');
+      Alert.alert('Error', 'An error occurred while creating the account. Try a different Username');
     }
   };
 
@@ -46,6 +52,13 @@ const Signup = ({ navigation }) => {
         secureTextEntry
         value={password}
         onChangeText={setPassword}
+      />
+      <TextInput
+              style={styles.input}
+              placeholder="Type Password Again"
+              secureTextEntry
+              value={passwordAgain}
+              onChangeText={setpasswordAgain}
       />
       <Button title="Sign Up" onPress={handleSignup} />
     </View>
