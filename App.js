@@ -30,7 +30,7 @@ async function initializeDatabase(db) {
             CREATE TABLE IF NOT EXISTS user (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               name TEXT NOT NULL,
-              user_name TEXT NOT NULL,
+              user_name TEXT NOT NULL UNIQUE,
               password TEXT NOT NULL
             );
             CREATE TABLE IF NOT EXISTS favorites (
@@ -57,7 +57,7 @@ async function initializeDatabase(db) {
           `);
     console.log('Database initialised');
     const testUser = await getUserByUserName(db, 'angel'); // Pass the db instance and username
-    if (testUser && testUser.length > 0) {
+    if (testUser== null) {
       const statement = await db.prepareAsync('INSERT INTO user (name, user_name, password) VALUES (?,?,?)');
       await statement.executeAsync(["angel", "angel", "angel123"]);
       console.log("test user angel added");
@@ -66,7 +66,6 @@ async function initializeDatabase(db) {
     console.log('Error while initializing database : ', error);
   }
 }
-
 
 export default function App() {
   return (

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
-import { StyleSheet, Text, View, TextInput, Button, Image, Dimensions } from 'react-native';
+import { StyleSheet, Text, View,Alert, TextInput, Button, Image, Dimensions } from 'react-native';
 
 import HomePage from './homepage';
 import { getUserByUserName } from '../DB/appDBService';
@@ -28,17 +28,17 @@ export default function Login({ navigation }) {
       if (user) {
         // Check if the entered password matches the user's password in the database
         if (user.password === password) {
-//          Alert.alert('Success', 'Login successful');
+          Alert.alert('Success', 'Login successful');
           navigation.navigate('homepage',{user: user});  // Navigate to the homepage if login is successful
         } else {
-//          Alert.alert('Error', 'Incorrect password');
+          Alert.alert('Error', 'Incorrect password');
         }
       } else {
-//        Alert.alert('Error', 'User not found');
+        Alert.alert('Error', 'User not found');
       }
     } catch (error) {
       console.error('Error during login:', error);
-//      Alert.alert('Error', 'An error occurred during login');
+      Alert.alert('Error', 'An error occurred during login');
     }
   };
 
